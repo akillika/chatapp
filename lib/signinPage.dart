@@ -2,6 +2,9 @@ import 'package:chatapp/chatPage.dart';
 import 'package:chatapp/signupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'authentication.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -11,6 +14,9 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  final emailController = TextEditingController();
+  final passController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +34,7 @@ class _SignInPageState extends State<SignInPage> {
                 Text("Sign In",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
                 SizedBox(height: 30,),
                 TextField(
+                  controller: emailController,
                   // textAlign: TextAlign.center,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
@@ -47,6 +54,7 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 SizedBox(height: 10,),
                 TextField(
+                  controller: passController,
                   // textAlign: TextAlign.center,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
@@ -69,10 +77,19 @@ class _SignInPageState extends State<SignInPage> {
                   height: 50.0,
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => ChatPage()),
-                      );
+                      AuthenticationHelper()
+                          .signIn(email: emailController.text, password: passController.text)
+                          .then((result) {
+                        if (result == null) {
+                          var currentUser = FirebaseAuth.instance.currentUser;
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) => ChatPage(UID: currentUser!.uid.toString(),)));
+                        } else {
+                          final snackBar = SnackBar(content: Text(result));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                        }
+                      });
                     },
                     child: Container(
                       decoration: BoxDecoration(

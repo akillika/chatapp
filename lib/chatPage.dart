@@ -1,9 +1,10 @@
+import 'package:chatapp/authentication.dart';
+import 'package:chatapp/signinPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key}) : super(key: key);
-
+  const ChatPage({Key? key, required String UID}) : super(key: key);
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -28,18 +29,25 @@ class _ChatPageState extends State<ChatPage> {
                     value: 1, child: Text("Privacy Policy page")),
                 PopupMenuDivider(),
                 PopupMenuItem<int>(
+
                     value: 2,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.logout,
-                          color: Colors.red,
-                        ),
-                        const SizedBox(
-                          width: 7,
-                        ),
-                        Text("Logout")
-                      ],
+                    child: GestureDetector(
+                      onTap: (){
+                        AuthenticationHelper().authSignOut();
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignInPage()));
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout,
+                            color: Colors.red,
+                          ),
+                          const SizedBox(
+                            width: 7,
+                          ),
+                          Text("Logout")
+                        ],
+                      ),
                     )),
               ],
               // onSelected: (),
