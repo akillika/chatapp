@@ -4,12 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main () async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  if (FirebaseAuth.instance.currentUser != null) {
-
-
+  if (FirebaseAuth.instance.currentUser == null) {
     runApp(MyApp());
   } else {
     var currentUser = FirebaseAuth.instance.currentUser;
@@ -42,7 +40,9 @@ class MyApp1 extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: ChatPage(UID: uid,),
+      home: ChatPage(
+        uid: uid,
+      ),
     );
   }
 }

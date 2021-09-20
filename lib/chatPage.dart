@@ -1,10 +1,12 @@
+import 'package:chatapp/accountPage.dart';
 import 'package:chatapp/authentication.dart';
 import 'package:chatapp/signinPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({Key? key, required String UID}) : super(key: key);
+  const ChatPage({Key? key, required this.uid}) : super(key: key);
+  final String uid;
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -24,17 +26,30 @@ class _ChatPageState extends State<ChatPage> {
             child: PopupMenuButton<int>(
               color: Colors.black,
               itemBuilder: (context) => [
-                PopupMenuItem<int>(value: 0, child: Text("Settings")),
+                PopupMenuItem<int>(
+                    value: 0,
+                    child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AccountPage(
+                                        uid: widget.uid,
+                                      )));
+                        },
+                        child: Text("Account"))),
                 PopupMenuItem<int>(
                     value: 1, child: Text("Privacy Policy page")),
                 PopupMenuDivider(),
                 PopupMenuItem<int>(
-
                     value: 2,
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         AuthenticationHelper().authSignOut();
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignInPage()));
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignInPage()));
                       },
                       child: Row(
                         children: [
@@ -65,25 +80,47 @@ class _ChatPageState extends State<ChatPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Akil S",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),),
-                  Text("8:44 PM",style: TextStyle(fontSize: 16,color: Colors.black38),),
+                  Text(
+                    "Akil S",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    "8:44 PM",
+                    style: TextStyle(fontSize: 16, color: Colors.black38),
+                  ),
                 ],
-
               ),
-              SizedBox(height: 2,),
-              Text("Hi! How are you doing ?",style: TextStyle(fontSize: 16,color: Colors.black38),),
+              SizedBox(
+                height: 2,
+              ),
+              Text(
+                "Hi! How are you doing ?",
+                style: TextStyle(fontSize: 16, color: Colors.black38),
+              ),
               Divider(),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Madhavan S",style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),),
-                  Text("9:20 AM",style: TextStyle(fontSize: 16,color: Colors.black38),),
+                  Text(
+                    "Madhavan S",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    "9:20 AM",
+                    style: TextStyle(fontSize: 16, color: Colors.black38),
+                  ),
                 ],
-
               ),
-              SizedBox(height: 2,),
-              Text("I'll be there tomorrow morning! ?",style: TextStyle(fontSize: 16,color: Colors.black38),),
+              SizedBox(
+                height: 2,
+              ),
+              Text(
+                "I'll be there tomorrow morning! ?",
+                style: TextStyle(fontSize: 16, color: Colors.black38),
+              ),
               Divider(),
             ],
           ),
