@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,7 +17,7 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  var fullName, userName, emailID;
+  var fullName, userName, emailID, imageUrl;
 
   final picker = ImagePicker();
   File? _imageFile;
@@ -43,8 +43,17 @@ class _AccountPageState extends State<AccountPage> {
         fullName = data?['full_name'];
         userName = data?['user_name'];
         emailID = data?['email'];
+        imageUrl = data?['image_url'];
       });
     }
+  }
+
+  Future<void> addUser(String imgUrl, String uid) {
+    return users
+        .doc(uid)
+        .update({'image_url': imgUrl})
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 
   @override
@@ -56,6 +65,19 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    Future uploadPic(BuildContext context) async {
+      String fileName = _imageFile!.path.split('/').last;
+      // StorageReference firebaseStorageReference =
+      //     FirebaseStorage.instance.ref().child(fileName);
+
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage.ref().child(fileName);
+      UploadTask uploadTask = ref.putFile(_imageFile!);
+      var dowurl = await (await uploadTask).ref.getDownloadURL();
+      addUser(dowurl, widget.uid);
+      temp();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Account"),
@@ -76,9 +98,21 @@ class _AccountPageState extends State<AccountPage> {
                       ),
                       CircleAvatar(
                         radius: 40,
-                        backgroundColor: Colors.teal,
-                        child: const Text('AH'),
+                        backgroundColor: Colors.transparent,
+                        child: imageUrl == null
+                            ? Text("AS")
+                            : ClipOval(child: Image.network(imageUrl)),
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextButton(
+                          onPressed: () async {
+                            await pickImage();
+                            uploadPic(context);
+                            print('image uploaded');
+                          },
+                          child: Text("Edit profile picture")),
                       SizedBox(
                         height: 30,
                       ),
@@ -133,14 +167,6 @@ class _AccountPageState extends State<AccountPage> {
                           color: Colors.black38,
                         ),
                       ),
-                      TextButton(
-                          onPressed: pickImage, child: Text("Pick Image")),
-                      // _imageFile == null
-                      //     ? CircularProgressIndicator()
-                      //     : Image.file(
-                      //         _imageFile!,
-                      //         fit: BoxFit.fill,
-                      //       )
                     ],
                   ),
           ),

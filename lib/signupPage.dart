@@ -22,18 +22,20 @@ class _SignUpPageState extends State<SignUpPage> {
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  Future<void> addUser(String fullName, String email, String userName, String uid) {
-    return users.doc(uid)
+  Future<void> addUser(
+      String fullName, String email, String userName, String uid) {
+    return users
+        .doc(uid)
         .set({
-      'full_name': fullName,
-      'email': email,
-      'user_name': userName,
-      'uid':uid,
-    })
+          'full_name': fullName,
+          'email': email,
+          'user_name': userName,
+          'uid': uid,
+          'image_url': ''
+        })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,15 +44,20 @@ class _SignUpPageState extends State<SignUpPage> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body:  Center(
+      body: Center(
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Register",style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
-              SizedBox(height: 30,),
+              Text(
+                "Register",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 30,
+              ),
               TextField(
                 controller: fullNameController,
                 // textAlign: TextAlign.center,
@@ -70,9 +77,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   // fillColor: colorSearchBg,
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               TextField(
-
                 controller: userNameController,
                 // textAlign: TextAlign.center,
                 keyboardType: TextInputType.text,
@@ -91,7 +99,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   // fillColor: colorSearchBg,
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: emailController,
                 // textAlign: TextAlign.center,
@@ -111,7 +121,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   // fillColor: colorSearchBg,
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               TextField(
                 controller: passwordController,
                 // textAlign: TextAlign.center,
@@ -131,28 +143,34 @@ class _SignUpPageState extends State<SignUpPage> {
                   // fillColor: colorSearchBg,
                 ),
               ),
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               Container(
                 height: 50.0,
                 child: GestureDetector(
                   onTap: () {
                     AuthenticationHelper()
-                        .signUp(email: emailController.text, password: passwordController.text)
+                        .signUp(
+                            email: emailController.text,
+                            password: passwordController.text)
                         .then((result) {
                       if (result == null) {
                         var currentUser = FirebaseAuth.instance.currentUser;
-                        addUser(fullNameController.text, emailController.text,userNameController.text,currentUser!.uid.toString());
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (context) => SignInPage()));
+                        addUser(
+                            fullNameController.text,
+                            emailController.text,
+                            userNameController.text,
+                            currentUser!.uid.toString());
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignInPage()));
                       } else {
                         final snackBar = SnackBar(content: Text(result));
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-
-
                       }
                     });
-
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -184,26 +202,35 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               GestureDetector(
-                onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>SignInPage()));
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SignInPage()));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Already have an account?",style: TextStyle(fontSize: 15),),
-                    Text(" Sign in now",style: TextStyle(fontWeight: FontWeight.bold,color: Colors.teal,fontSize: 15),),
+                    Text(
+                      "Already have an account?",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    Text(
+                      " Sign in now",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.teal,
+                          fontSize: 15),
+                    ),
                   ],
                 ),
               )
-
             ],
-
           ),
         ),
       ),
-
     );
   }
 }
