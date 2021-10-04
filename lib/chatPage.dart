@@ -1,5 +1,6 @@
 import 'package:chatapp/accountPage.dart';
 import 'package:chatapp/authentication.dart';
+import 'package:chatapp/conversations.dart';
 import 'package:chatapp/signinPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,18 +78,29 @@ class _ChatPageState extends State<ChatPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Akil S",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    "8:44 PM",
-                    style: TextStyle(fontSize: 16, color: Colors.black38),
-                  ),
-                ],
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ConversationsPage(
+                                uid: widget.uid,
+                              )));
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Akil S",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      "8:44 PM",
+                      style: TextStyle(fontSize: 16, color: Colors.black38),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 height: 2,
